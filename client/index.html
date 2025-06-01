@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quote Poster</title>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&family=Inter:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background-color: black;
+        font-family: 'Georgia', serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .quote-container {
+        position: relative;
+        background: url('https://res.cloudinary.com/df2zfm1f2/image/upload/v1748785622/image3_jzjm3b.jpg')
+          center center / cover no-repeat;
+        width: 1080px;
+        height: 1920px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        overflow: hidden;
+        color: white;
+      }
+
+      .quote-container::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background:
+          linear-gradient(to top, rgba(0, 0, 0, 1), transparent 70%),
+          linear-gradient(to bottom, rgba(0, 0, 0, 1), transparent 70%);
+        z-index: 1;
+      }
+
+      .overlay {
+        position: absolute;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.65);
+        backdrop-filter: blur(6px);
+        z-index: 1;
+      }
+
+      .quote-text {
+        position: relative;
+        z-index: 2;
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 3.2rem;
+        font-weight: 400;
+        line-height: 1.5;
+        max-width: 90%;
+        padding: 2rem;
+      }
+
+      .quote-text::before,
+      .quote-text::after {
+        font-size: 3.8rem;
+        color: #f1c27d;
+        font-weight: bold;
+      }
+
+      .quote-text::before {
+        content: '“';
+        margin-right: 6px;
+      }
+
+      .quote-text::after {
+        content: '”';
+        margin-left: 6px;
+      }
+
+      .quote-text::first-letter {
+        font-size: 3.6rem;
+        font-weight: bold;
+        color: #f1c27d;
+      }
+
+      .author {
+        position: relative;
+        z-index: 2;
+        margin-top: 3rem;
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 2.2rem;
+        font-style: italic;
+        font-weight: 400;
+        color: #ffefc1;
+        text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.9);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="quote-container">
+      <div class="overlay"></div>
+      <div class="quote-text">
+        I do not ask for your love; to love you is enough. I carry this feeling
+        not as a burden, but as a quiet joy, a sacred flame that needs no
+        answer. Let me suffer if I must—but allow me the dignity of loving you
+        in silence forever.
+      </div>
+      <div class="author">– JOSHUA WISENBAKER</div>
+    </div>
+  </body>
+</html>
