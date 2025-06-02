@@ -62,7 +62,7 @@ export class RedditService {
   async getSubreddit(access_token: string) {
     try {
       const response = await this.httpService.axiosRef.get(
-        `https://oauth.reddit.com/r/ufc/top?t=week&limit=1`,
+        `https://oauth.reddit.com/r/askreddit/hot`,
         {
           headers: {
             Authorization: `Bearer ` + access_token,

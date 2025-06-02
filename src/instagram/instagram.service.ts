@@ -37,9 +37,7 @@ export class InstagramService {
         {
           video_url: url,
           media_type: 'REELS',
-          caption:
-            caption +
-            '#lovequotes #quotesaboutlove #quotesaboutlife #quoteslover #quoteslove #aboutlove #lovequotesforher  #quotesdaily #quoteoftheday #poetry #love #couplegoals',
+          caption: caption,
           upload_type: 'resumable',
         },
         {
@@ -93,7 +91,7 @@ export class InstagramService {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
   async publishContent() {
-    const data: PublishContent = await this.groqService.callGROQAPI();
+    const data = await this.groqService.callGROQAPI();
     const image = await this.imagegenerationService.generateImage({
       authorText: data.author,
       quote: data.quote,
@@ -108,7 +106,7 @@ export class InstagramService {
     const cloudinaryUrl = await this.cloudinaryService.uploadToCloudinary(generatedVideo);
     console.log('Video uploaded to cloudinary ......', cloudinaryUrl);
     const contanerId = await this.createContainer(cloudinaryUrl, data.caption);
-    await this.delay(30000);
+    await this.delay(50000);
     const publishResponse = await this.PublsihContainer(contanerId, this.ig_id);
     console.log({ publishResponse });
     return 'success';

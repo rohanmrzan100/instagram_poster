@@ -7,8 +7,8 @@ import { CronExpressionParser } from 'cron-parser';
 export class TaskService {
   constructor(private instagramService: InstagramService) {}
 
-  private readonly cronExpression = CronExpression.EVERY_2_HOURS;
-  @Cron(CronExpression.EVERY_2_HOURS)
+  private readonly cronExpression = CronExpression.EVERY_HOUR;
+  @Cron(CronExpression.EVERY_HOUR)
   async handleCron() {
     await this.instagramService.publishContent();
   }

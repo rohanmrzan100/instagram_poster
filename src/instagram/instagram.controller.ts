@@ -1,5 +1,5 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
-import { InstagramService, PublishContent } from './instagram.service';
+import { Controller, Get, Post } from '@nestjs/common';
+import { InstagramService } from './instagram.service';
 
 @Controller('api/instagram')
 export class InstagramController {
@@ -12,7 +12,7 @@ export class InstagramController {
 
 
   @Post('publish')
-  async publishContent(@Body() data: PublishContent): Promise<any> {
-    return this.instagramService.publishContent(data);
+  async publishContent(): Promise<any> {
+    return this.instagramService.publishContent();
   }
 }
