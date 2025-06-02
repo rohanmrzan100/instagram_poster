@@ -4,6 +4,7 @@ import * as path from 'path';
 import { ImageGenerationService } from 'src/canva/canva.service';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { FfmpegService } from 'src/ffmpeg/ffmpeg.service';
+import { GroqService } from 'src/groq/groq.service';
 
 export interface PublishContent {
   author: string;
@@ -17,6 +18,7 @@ export class InstagramService {
     private cloudinaryService: CloudinaryService,
     private ffmpegService: FfmpegService,
     private imagegenerationService: ImageGenerationService,
+    private groqService: GroqService,
     private readonly httpService: HttpService,
   ) {}
 
@@ -35,7 +37,9 @@ export class InstagramService {
         {
           video_url: url,
           media_type: 'REELS',
-          caption: caption,
+          caption:
+            caption +
+            '#lovequotes #quotesaboutlove #quotesaboutlife #quoteslover #quoteslove #aboutlove #lovequotesforher  #quotesdaily #quoteoftheday #poetry #love #couplegoals',
           upload_type: 'resumable',
         },
         {
@@ -50,10 +54,7 @@ export class InstagramService {
 
       return creationResponse.data.id;
     } catch (error) {
-      console.error(
-        'Failed to create container',
-        error.response?.data || error.message,
-      );
+      console.error('Failed to create container', error.response?.data || error.message);
 
       throw new HttpException(
         error.response?.data || 'Failed to create container',
@@ -80,10 +81,7 @@ export class InstagramService {
       console.log(publishResponse.data);
       return 'Published to instagram sucessfully !';
     } catch (error) {
-      console.error(
-        'Failed to publish container',
-        error.response?.data || error.message,
-      );
+      console.error('Failed to publish container', error.response?.data || error.message);
 
       throw new HttpException(
         error.response?.data || 'Failed to publish container',
@@ -94,7 +92,8 @@ export class InstagramService {
   delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
-  async publishContent(data: PublishContent) {
+  async publishContent() {
+    const data: PublishContent = await this.groqService.callGROQAPI();
     const image = await this.imagegenerationService.generateImage({
       authorText: data.author,
       quote: data.quote,
@@ -105,21 +104,13 @@ export class InstagramService {
       path.resolve(__dirname, '../../client/sound.mp3'),
       path.resolve(__dirname, `../../${Date.now()}.mp4`),
     );
-
     console.log('Video generated ......', generatedVideo);
-
-    const cloudinaryUrl =
-      await this.cloudinaryService.uploadToCloudinary(generatedVideo);
+    const cloudinaryUrl = await this.cloudinaryService.uploadToCloudinary(generatedVideo);
     console.log('Video uploaded to cloudinary ......', cloudinaryUrl);
-
     const contanerId = await this.createContainer(cloudinaryUrl, data.caption);
-
     await this.delay(30000);
-
     const publishResponse = await this.PublsihContainer(contanerId, this.ig_id);
-
     console.log({ publishResponse });
-
     return 'success';
   }
 }

@@ -1,9 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post
-} from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { InstagramService, PublishContent } from './instagram.service';
 
 @Controller('api/instagram')
@@ -12,12 +7,12 @@ export class InstagramController {
 
   @Get('publish')
   async helloworld(): Promise<string> {
-    return 'hello instagram ! ';
+    return 'hello instagram 123! ' + process.env.PORT;
   }
+
 
   @Post('publish')
   async publishContent(@Body() data: PublishContent): Promise<any> {
     return this.instagramService.publishContent(data);
   }
 }
-  

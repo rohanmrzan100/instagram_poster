@@ -10,6 +10,8 @@ import { FfmpegModule } from './ffmpeg/ffmpeg.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TaskService } from './task/task.service';
 import { TaskModule } from './task/task.module';
+import { RedditModule } from './reddit/reddit.module';
+import { GroqModule } from './groq/groq.module';
 
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { TaskModule } from './task/task.module';
     CanvaModule,
     FfmpegModule,
     TaskModule,
+    RedditModule,
+    GroqModule,
   ],
   providers: [AppService, TaskService],
 })

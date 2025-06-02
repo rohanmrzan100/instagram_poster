@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import * as fs from 'fs/promises';
+import * as fsp from 'fs/promises';
+import * as fs from 'fs';
 import * as path from 'path';
 import * as puppeteer from 'puppeteer';
 export interface PublishContent {
@@ -28,10 +29,18 @@ export class ImageGenerationService {
     console.log(this.htmlFilePath);
 
     try {
-      let html = await fs.readFile(this.htmlFilePath, 'utf-8');
+      let html = await fsp.readFile(this.htmlFilePath, 'utf-8');
+      // Check if Chrome exists
+      if (!fs.existsSync('/usr/bin/google-chrome')) {
+        throw new Error(
+          'Chrome executable not found at /usr/bin/google-chrome',
+        );
+      }
+
       const browser = await puppeteer.launch({
         headless: true, // or `true` in older versions
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        executablePath: '/usr/bin/google-chrome',
       });
       const page = await browser.newPage();
 
@@ -76,7 +85,10 @@ export class ImageGenerationService {
       return imageDataUrl;
     } catch (error) {
       console.error('Image generation failed', error);
-      return new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+      return new HttpException(
+        'Image generation failed',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }
