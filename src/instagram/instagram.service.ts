@@ -92,23 +92,24 @@ export class InstagramService {
   }
   async publishContent() {
     const data = await this.groqService.callGROQAPI();
-    const image = await this.imagegenerationService.generateImage({
-      authorText: data.author,
-      quote: data.quote,
-    });
-    console.log('Image generated ......');
-    const generatedVideo = await this.ffmpegService.createInstagramVideo(
-      image,
-      path.resolve(__dirname, '../../client/sound.mp3'),
-      path.resolve(__dirname, `../../${Date.now()}.mp4`),
-    );
-    console.log('Video generated ......', generatedVideo);
-    const cloudinaryUrl = await this.cloudinaryService.uploadToCloudinary(generatedVideo);
-    console.log('Video uploaded to cloudinary ......', cloudinaryUrl);
-    const contanerId = await this.createContainer(cloudinaryUrl, data.caption);
-    await this.delay(50000);
-    const publishResponse = await this.PublsihContainer(contanerId, this.ig_id);
-    console.log({ publishResponse });
+    return data
+    // const image = await this.imagegenerationService.generateImage({
+    //   authorText: data.author,
+    //   quote: data.quote,
+    // });
+    // console.log('Image generated ......');
+    // const generatedVideo = await this.ffmpegService.createInstagramVideo(
+    //   image,
+    //   path.resolve(__dirname, '../../client/sound.mp3'),
+    //   path.resolve(__dirname, `../../${Date.now()}.mp4`),
+    // );
+    // console.log('Video generated ......', generatedVideo);
+    // const cloudinaryUrl = await this.cloudinaryService.uploadToCloudinary(generatedVideo);
+    // console.log('Video uploaded to cloudinary ......', cloudinaryUrl);
+    // const contanerId = await this.createContainer(cloudinaryUrl, data.caption);
+    // await this.delay(50000);
+    // const publishResponse = await this.PublsihContainer(contanerId, this.ig_id);
+    // console.log({ publishResponse });
     return 'success';
   }
 }

@@ -23,20 +23,13 @@ export class GroqService {
     return str;
   }
 
-  async callGROQAPI() {
-    try {
-      const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-
-      const response = await groq.chat.completions.create({
-        messages: [
-          {
-            role: 'user',
-            content: `Create a single, original quote object related to love, sadness, feminine strength, deep emotion, or cinematic/musical themes. Vary the emotional tone and topic each time. Sometimes include a real author and leave the author blank if unknown. Do not repeat previous quotes or phrasing. 
+  private prompts = [
+    `Create a single, original quote object related to love, sadness, feminine strength, deep emotion, or cinematic/musical themes. Vary the emotional tone and topic each time. Sometimes include a real author and leave the author blank if unknown. Do not repeat previous quotes or phrasing. 
 
 
             Also write a  caption that encourages Instagram engagement, and add 5–6 relevant hashtags.
 
-            Respond with **valid JSON only**, using **double quotes** for all property names and string values. Do not use single quotes. Return exactly one object, nothing else. Do not repeat previous quotes and donot include Virginia Woolf
+            Respond with **valid JSON only**, using **double quotes** for all property names and string values. Do not use single quotes. Return exactly one object, nothing else. Do not repeat previous quotes and donot include Virginia Woolf Anaïs Nin
 
             Example format:
             {
@@ -46,6 +39,49 @@ export class GroqService {
             }
 
             `,
+    `Create a unique single, original quote object related to love, sadness, feminine strength, deep emotion or betryal in love .leave the author blank if unknown. Do not repeat previous quotes or phrasing. And dont start the quotes with same sentence
+
+
+            Also write a short caption that encourages Instagram engagement, and add 5–6 relevant hashtags.
+
+            Respond with **valid JSON only**, using **double quotes** for all property names and string values. Do not use single quotes. Return exactly one object, nothing else. Do not repeat previous quotes and donot include Virginia Woolf Anaïs Nin
+
+            Example format:
+            {
+            "author": "Dostoevsky",
+            "quote": "Sometimes I think that to feel too deeply is a curse, not a gift...",
+            "caption": "Fyodor Dostoevsky was a Russian novelist... #dostoevsky #philosophy #deep #existential #quotes #soul"
+            }
+
+            `,
+    `Create unique a single quote object related to being in a happy relation emotion which is women centric,leave the author blank if unknown. Do not repeat previous quotes or phrasing. And dont start the quotes with same sentence
+
+
+            Also write a short caption that encourages Instagram engagement, and add 5–6 relevant hashtags.
+
+            Respond with **valid JSON only**, using **double quotes** for all property names and string values. Do not use single quotes. Return exactly one object, nothing else. Do not repeat previous quotes and donot include Virginia Woolf Anaïs Nin
+
+            Example format:
+            {
+            "author": "Dostoevsky",
+            "quote": "Sometimes I think that to feel too deeply is a curse, not a gift...",
+            "caption": "Fyodor Dostoevsky was a Russian novelist... #dostoevsky #philosophy #deep #existential #quotes #soul"
+            }
+
+            `,
+  ];
+  async callGROQAPI() {
+    try {
+      const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+      const randomArrayIndex = Math.floor(Math.random() * this.prompts.length);
+
+      console.log({randomArrayIndex});
+
+      const response = await groq.chat.completions.create({
+        messages: [
+          {
+            role: 'user',
+            content: this.prompts[randomArrayIndex],
           },
         ],
         model: 'llama-3.3-70b-versatile',
