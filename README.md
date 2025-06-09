@@ -16,3 +16,10 @@ docker exec -it instagram sh
 Pablo Neruda was a Chilean poet and diplomat, celebrated for his passionate and sensuous verse that captures the essence of love, longing, and political struggle. His works, including Twenty Love Poems and a Song of Despair and The Captain’s Verses, speak to the soul with vivid imagery and emotional intensity. Neruda’s poetry remains a timeless tribute to the beauty and pain of human experience.
 
 #neruda #poetry #love #deep #quotes #romantic #literature
+
+
+
+https://www.instagram.com/aailagulu/reels/
+
+
+https://www.instagram.com/footy_goat_suii/reels/
