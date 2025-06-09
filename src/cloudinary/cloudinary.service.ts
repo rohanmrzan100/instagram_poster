@@ -18,15 +18,46 @@ export class CloudinaryService {
         folder: 'your-folder-name', // optional
       });
 
+
       // delete video after uploading to cloudinary
       await fs
         .unlink(filePath)
         .catch((cleanupErr) =>
           console.error(`Error cleaning up temp video: ${cleanupErr.message}`),
         );
-      return result.secure_url;
+      console.log('Video uploaded to cloudinary ......');
+      return { cloudinaryUrl: result.secure_url, public_id: result.public_id };
     } catch (error) {
       throw new Error(`Cloudinary upload failed: ${error.message}`);
+    }
+  }
+  async uploadImageToCloudinary(filePath: string): Promise<any> {
+    try {
+      const result = await cloudinary.uploader.upload(filePath, {
+        resource_type: 'image',
+        folder: 'your-folder-name', // optional
+        format: 'png',
+      });
+
+      await fs
+        .unlink(filePath)
+        .catch((cleanupErr) =>
+          console.error(`Error cleaning up temp video: ${cleanupErr.message}`),
+        );
+      console.log('Image uploaded to cloudinary ......');
+      return { cloudinaryUrl: result.secure_url, public_id: result.public_id };
+    } catch (error) {
+      throw new Error(`Cloudinary upload failed: ${error.message}`);
+    }
+  }
+
+  async deletefromCloudinary(public_id: string): Promise<any> {
+    try {
+      const result = await cloudinary.uploader.destroy(public_id, { resource_type: 'video' });
+
+      console.log('deletion from cloudinary', result);
+    } catch (error) {
+      throw new Error(`Cloudinary deletion failed: ${error.message}`);
     }
   }
 }

@@ -1,7 +1,7 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { InstagramService, PublishContent } from 'src/instagram/instagram.service';
 import { CronExpressionParser } from 'cron-parser';
+import { InstagramService } from 'src/instagram/instagram.service';
 
 @Injectable()
 export class TaskService {
@@ -9,8 +9,9 @@ export class TaskService {
 
   private readonly cronExpression = CronExpression.EVERY_HOUR;
   @Cron(CronExpression.EVERY_HOUR)
-  async handleCron() {
-    await this.instagramService.publishContent();
+  async handleCronGroq() {
+    await this.instagramService.publishFootballOnInstagram();
+    await this.instagramService.publishQuotesContent();
   }
 
   getTimeUntilNextExecution(): string {

@@ -6,6 +6,7 @@ import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { FfmpegService } from 'src/ffmpeg/ffmpeg.service';
 import { ImageGenerationService } from 'src/canva/canva.service';
 import { GroqService } from 'src/groq/groq.service';
+import { RedditService } from 'src/reddit/reddit.service';
 
 @Module({
   imports: [HttpModule],
@@ -17,6 +18,7 @@ import { GroqService } from 'src/groq/groq.service';
     FfmpegService,
     ImageGenerationService,
     GroqService,
+    RedditService,
   ],
 })
 export class InstagramModule {}

@@ -5,14 +5,13 @@ import { InstagramService } from './instagram.service';
 export class InstagramController {
   constructor(private instagramService: InstagramService) {}
 
-  @Get('publish')
-  async helloworld(): Promise<string> {
-    return 'hello instagram 123! ' + process.env.PORT;
+  @Post('publish/quotes')
+  async publishContent(): Promise<any> {
+    return this.instagramService.publishQuotesContent();
   }
 
-
-  @Post('publish')
-  async publishContent(): Promise<any> {
-    return this.instagramService.publishContent();
+  @Post('publish/football')
+  async publishFootballOnInstagram(): Promise<any> {
+    return this.instagramService.publishFootballOnInstagram();
   }
 }

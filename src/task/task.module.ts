@@ -7,6 +7,7 @@ import { ImageGenerationService } from 'src/canva/canva.service';
 import { HttpModule } from '@nestjs/axios';
 import { TaskController } from './task.controller';
 import { GroqService } from 'src/groq/groq.service';
+import { RedditService } from 'src/reddit/reddit.service';
 @Module({
   imports: [HttpModule],
   providers: [
@@ -16,6 +17,7 @@ import { GroqService } from 'src/groq/groq.service';
     FfmpegService,
     ImageGenerationService,
     GroqService,
+    RedditService,
   ],
   exports: [TaskModule],
   controllers: [TaskController],

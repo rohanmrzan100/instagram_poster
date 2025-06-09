@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Reddit Comment Scroll — Dark Mode</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background: #1a1a1b;
+        font-family: 'Inter', sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #d7dadc;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      .container {
+        width: 1080px;
+        height: 1920px;
+        background: #0b0c0e;
+        border-radius: 24px;
+        padding: 3.5rem 4rem;
+        box-shadow:
+          0 12px 40px rgba(0, 0, 0, 0.5),
+          inset 0 0 60px rgba(255, 255, 255, 0.02);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        color: #d7dadc;
+      }
+
+      .subreddit {
+        font-size: 2rem;
+        font-weight: 600;
+        color: #d7dadc;
+        margin-bottom: 1rem;
+        text-align: center;
+        opacity: 0.8;
+      }
+
+      .header {
+        font-weight: 700;
+        font-size: clamp(3rem, 6vw, 5rem);
+        line-height: 1.1;
+        margin-bottom: 2rem;
+        border-left: 8px solid #ff4500;
+        padding-left: 1rem;
+        color: #ff4500;
+        margin: 100px 0;
+        text-shadow: 0 0 10px rgba(255, 69, 0, 0.6);
+      }
+
+      .comments {
+        flex-grow: 1;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        padding-right: 0.5rem;
+      }
+
+      .comment {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(4px);
+        border-radius: 16px;
+        padding: 1.5rem 2.5rem;
+        font-size: clamp(2rem, 3vw, 2.5rem);
+        line-height: 1.6;
+        font-weight: 400;
+        color: #d7dadc;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 0.6s ease;
+        position: relative;
+      }
+
+      .comment.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .comment.exit {
+        opacity: 0;
+        transform: translateY(-30px);
+        height: 0;
+        margin: 0;
+        padding: 0;
+      }
+
+      .comment-author {
+        margin-top: 1rem;
+        font-size: clamp(1rem, 1.5vw, 1.5rem);
+        font-weight: 600;
+        color: #ff4500;
+        text-align: right;
+        font-style: italic;
+      }
+
+      .comment-reply {
+        margin-top: 1rem;
+        margin-left: 2rem;
+        padding: 1rem 2rem;
+        background: rgba(255, 255, 255, 0.02);
+        border-left: 4px solid #ff4500;
+        border-radius: 10px;
+        font-size: clamp(1.5rem, 2vw, 1.8rem);
+        color: #d7dadc;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.3);
+        transition: all 0.4s ease;
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      .comment-reply.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .divider {
+        height: 4px;
+        background: linear-gradient(to right, #ff4500, transparent);
+        margin-bottom: 2rem;
+        border: none;
+        opacity: 0.5;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="subreddit">r/AskReddit</div>
+      <div class="header" id="postTitle">Loading post title…</div>
+      <div class="divider"></div>
+      <div class="comments" id="commentList"></div>
+    </div>
+
+    <script>
+      const redditData = {
+        postTitle: "What is something you think everyone should know but most people don't?",
+        comments: [
+          {
+            author: 'u/LifeHacker',
+            text: `Some players really do want to play at a decent level of footy.`,
+            replies: [
+              { author: 'u/FootyFan', text: `Exactly! Some value legacy more than a paycheck.` },
+              {
+                author: 'u/NeutralObserver',
+                text: `Would love to see more of that mindset these days.`,
+              },
+            ],
+          },
+          {
+            author: 'u/TimeSaver',
+            text: `Does playing in the PL come with more pride than let’s say la liga? Or are you talking about specifically PL vs Saudi league?`,
+          },
+          {
+            author: 'u/FinanceNerd',
+            text: `The comment I replied to was about japanese players specifically, not sure why you’re bringing up asian players as a whole?\n\nI was just wondering if japanese people see the PL as a lot more prideful than the other top 5 leagues. For example, would playing for Brighton come with more pride than a team like Juventus or Atletico Madrid just because Brighton is in the PL?`,
+          },
+          { author: 'u/CalmMind', text: 'Mindfulness isn’t fluff—it’s mental hygiene.' },
+        ],
+      };
+
+      const postTitleEl = document.getElementById('postTitle');
+      const commentListEl = document.getElementById('commentList');
+
+      // Update only text content of postTitle
+      postTitleEl.textContent = redditData.postTitle;
+
+      const MAX_VISIBLE = 2;
+      let index = 0;
+
+      function createCommentElement(comment) {
+        const commentEl = document.createElement('div');
+        commentEl.className = 'comment';
+        commentEl.innerHTML = `
+          <div>${comment.text.replace(/\n/g, '<br/>')}</div>
+          <div class="comment-author">- ${comment.author}</div>
+        `;
+
+        if (comment.replies && comment.replies.length > 0) {
+          comment.replies.forEach((reply) => {
+            const replyEl = document.createElement('div');
+            replyEl.className = 'comment-reply';
+            replyEl.innerHTML = `
+              <div>${reply.text}</div>
+              <div class="comment-author">- ${reply.author}</div>
+            `;
+            commentEl.appendChild(replyEl);
+            requestAnimationFrame(() => replyEl.classList.add('visible'));
+          });
+        }
+
+        return commentEl;
+      }
+
+      function showNextComments() {
+        if (index >= redditData.comments.length) return;
+
+        if (commentListEl.children.length >= MAX_VISIBLE) {
+          const oldest = commentListEl.firstElementChild;
+          if (oldest) {
+            const height = oldest.scrollHeight;
+            oldest.style.height = `${height}px`;
+            oldest.offsetHeight; // force reflow
+            oldest.classList.remove('visible');
+            oldest.classList.add('exit');
+            requestAnimationFrame(() => {
+              oldest.style.height = '0px';
+            });
+            setTimeout(() => {
+              oldest.remove();
+              showNextComments();
+            }, 700);
+            return;
+          }
+        }
+
+        const newComment = createCommentElement(redditData.comments[index]);
+        commentListEl.appendChild(newComment);
+        requestAnimationFrame(() => newComment.classList.add('visible'));
+        index++;
+        setTimeout(showNextComments, 7000);
+      }
+
+      showNextComments();
+    </script>
+  </body>
+</html>
